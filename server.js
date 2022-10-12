@@ -4,7 +4,10 @@ import { createRequire } from 'module';
 
 import Contenedor from './Contenedor.js';
 let contenedor = new Contenedor('./productos.txt');
-let productos = await contenedor.manejarArchivo();
+let contenedorProductos = await contenedor.manejarArchivo();
+
+let contenedorMensaje = new Contenedor('./mensajes.txt');
+let lecturaMensajes = await contenedorMensaje.manejarArchivo();
 
 const require = createRequire(import.meta.url);
 const { Server: HttpServer}  = require('http');
@@ -24,18 +27,33 @@ app.set('views', './views/pug');
 app.set('view engine', 'pug');
 
 let mensajes = [];
+lecturaMensajes.forEach(mensaje => {
+    mensajes.push(mensaje)
+})
+
+let productos = [];
+contenedorProductos.forEach(producto => {
+    productos.push(producto)
+});
 
 io.on('connection', socket => {
     console.log('Usuario conectado')
+
     socket.emit('productos', productos)
-    socket.on('nuevoProducto', (nuevoProducto) => {
-        (async () => await contenedor.save(nuevoProducto))();
-        io.sockets.emit('productos', nuevoProducto);
-    })
     socket.emit('mensajes', mensajes);
+
+    socket.on('nuevoProducto', nuevoProducto => {
+        nuevoProducto.id = productos.length + 1;
+        productos.push(nuevoProducto);
+        (async () => await contenedor.save(nuevoProducto))();
+        io.sockets.emit('productos', productos);
+    })
+    
     socket.on('nuevoMensaje', mensaje =>{
+        mensaje.id = mensajes.length + 1;
         mensajes.push(mensaje);
-        io.socket.emit('mensajes', mensajes)
+        (async () => await contenedorMensaje.save(mensaje))();
+        io.sockets.emit('mensajes', mensajes)
     })
 })
 

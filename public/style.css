@@ -9,3 +9,21 @@ img{
 h1{
     text-align: center;
 }
+
+.row{
+    justify-content: space-around;
+}
+
+.fontFecha{
+    color: brown;
+}
+
+.fontEmail{
+    color: blue;
+    font-weight: bolder;
+}
+
+.fontTexto{
+    color: green;
+    font-style: italic;
+}
