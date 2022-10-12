@@ -16,6 +16,7 @@ class Contenedor {
         let objetoContenido = JSON.parse(contenido)
         let id = objetoContenido.length + 1;
         producto.id = id;
+        producto.price = parseInt(producto.price)
         console.log(`Id asignado: ${id}`)
         objetoContenido.push(producto)
         await fs.promises.writeFile(this.nombreArchivo, JSON.stringify(objetoContenido))

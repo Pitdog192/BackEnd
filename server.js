@@ -1,41 +1,44 @@
 import  express from 'express';
 import routerProductos from './src/routerProductos.js';
+import { createRequire } from 'module';
 
-//NECESARIO PARA USAR __dirname 
-import path from 'path';
-import { fileURLToPath } from 'url';
+import Contenedor from './Contenedor.js';
+let contenedor = new Contenedor('./productos.txt');
+let productos = await contenedor.manejarArchivo();
 
-//IMPORT PARA HANDLEBARS
-import { engine } from 'express-handlebars';
-
-//NECESARIO PARA USAR __dirname 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const require = createRequire(import.meta.url);
+const { Server: HttpServer}  = require('http');
+const { Server: IOServer} = require('socket.io');
 
 const app = express();
+const httpServer = new HttpServer(app);
+const io = new IOServer(httpServer);
 const port = process.env.port || 8080;
 
 app.use(express.json());
-app.use(express.urlencoded( { extended:true }) );
+app.use(express.urlencoded({ extended:true }));
 app.use(express.static('public'));
 app.use('/productos', routerProductos);
 
-//EJS
-app.set('views', './views/ejs')
-app.set('view engine', 'ejs');
+app.set('views', './views/pug');
+app.set('view engine', 'pug');
 
-// HANDLEBARS
-// app.engine('hbs', engine({
-//     extname: '.hbs',
-//     defaultLayout: 'productos.hbs',
-//     layoutsDir: __dirname + '/views/hbs',
-// }));
-// app.set('views', './views/hbs');
-// app.set('view engine', 'hbs');
+let mensajes = [];
 
-// PUG
-// app.set('views', './views/pug');
-// app.set('view engine', 'pug');
+io.on('connection', socket => {
+    console.log('Usuario conectado')
+    socket.emit('productos', productos)
+    socket.on('nuevoProducto', (nuevoProducto) => {
+        (async () => await contenedor.save(nuevoProducto))();
+        io.sockets.emit('productos', nuevoProducto);
+    })
+    socket.emit('mensajes', mensajes);
+    socket.on('nuevoMensaje', mensaje =>{
+        mensajes.push(mensaje);
+        io.socket.emit('mensajes', mensajes)
+    })
+})
 
-const server = app.listen(port, () => console.log(`Server escuchando en el puerto: ${port}`));
+const server = httpServer.listen(port, () => console.log(`Server escuchando en el puerto: http://localhost:${port}`));
 server.on('error', (error) => console.log(`Error: ${error}`));
+

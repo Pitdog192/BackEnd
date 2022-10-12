@@ -3,6 +3,7 @@ import Contenedor from '../Contenedor.js';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
+
 const Router = require('router') 
 const routerProductos = Router();
 
