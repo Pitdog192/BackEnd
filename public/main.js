@@ -1,11 +1,11 @@
 const socket = io.connect();
 
 socket.on('productos', producto => {
-    renderProductos(producto)
+    renderProductos(producto);
 });
 
 socket.on('mensajes', mensaje => {
-    renderMensajes(mensaje)
+    renderMensajes(mensaje);
 })
 
 function renderMensajes(mensajes){
@@ -17,7 +17,7 @@ function renderMensajes(mensajes){
                 <td class="fontEmail"> ${mensaje.email}</td>
                 <td class="fontTexto">${mensaje.texto}</td>
             </tr>`
-        )
+        );
     }).join(" ");
     document.getElementById('mensajes').innerHTML = html;
 }
@@ -31,7 +31,7 @@ function renderProductos(productos){
                 <td> $${producto.price}</td>
                 <td><img src=${producto.thumnail}></td>
             </tr>`
-        )
+        );
     }).join(" ");
     document.getElementById('productos').innerHTML = html;
 }
@@ -44,8 +44,8 @@ const enviarMensaje = () => {
         email: document.getElementById('email').value,
         fecha: fecha,
         texto: document.getElementById('mensaje').value
-    }
-    socket.emit('nuevoMensaje', mensajeNuevo)
+    };
+    socket.emit('nuevoMensaje', mensajeNuevo);
     document.getElementById('email').value = '';
     document.getElementById('mensaje').value = '';    
     return false;
@@ -56,7 +56,7 @@ const enviarProducto = () => {
         title: document.getElementById('title').value,
         price: document.getElementById('price').value,
         thumnail: document.getElementById('thumnail').value
-    }
+    };
     socket.emit('nuevoProducto', nuevoProducto)
     document.getElementById('title').value = '';
     document.getElementById('price').value = '';

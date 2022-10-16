@@ -1,12 +1,13 @@
 import  express from 'express';
-import routerProductos from './src/routerProductos.js';
+import routerProductos from './src/Router/routerProductos.js';
+import routerCarrito from './src/Router/routerCarrito.js';
 import { createRequire } from 'module';
 
-import Contenedor from './Contenedor.js';
-let contenedor = new Contenedor('./productos.txt');
+import Contenedor from './utils/Contenedor.js';
+let contenedor = new Contenedor('./utils/productos.txt');
 let contenedorProductos = await contenedor.manejarArchivo();
 
-let contenedorMensaje = new Contenedor('./mensajes.txt');
+let contenedorMensaje = new Contenedor('./utils/mensajes.txt');
 let lecturaMensajes = await contenedorMensaje.manejarArchivo();
 
 const require = createRequire(import.meta.url);
@@ -21,25 +22,26 @@ const port = process.env.port || 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended:true }));
 app.use(express.static('public'));
-app.use('/productos', routerProductos);
-
-app.set('views', './views/pug');
-app.set('view engine', 'pug');
+app.use('/productos', routerProductos); //RUTA DE PRODUCTOS
+app.use('/carrito', routerCarrito); // RUTA DE CARRITO
+// app.set('views', './views/pug');
+// app.set('view engine', 'pug');
 
 let mensajes = [];
 lecturaMensajes.forEach(mensaje => {
     mensajes.push(mensaje)
-})
+});
 
 let productos = [];
 contenedorProductos.forEach(producto => {
     productos.push(producto)
 });
 
+// SOCKETS-------------------------------
 io.on('connection', socket => {
-    console.log('Usuario conectado')
+    console.log('Usuario conectado');
 
-    socket.emit('productos', productos)
+    socket.emit('productos', productos);
     socket.emit('mensajes', mensajes);
 
     socket.on('nuevoProducto', nuevoProducto => {
@@ -53,10 +55,14 @@ io.on('connection', socket => {
         mensaje.id = mensajes.length + 1;
         mensajes.push(mensaje);
         (async () => await contenedorMensaje.save(mensaje))();
-        io.sockets.emit('mensajes', mensajes)
+        io.sockets.emit('mensajes', mensajes);
     })
 })
+// FIN DE SOCKETS-------------------------
 
-const server = httpServer.listen(port, () => console.log(`Server escuchando en el puerto: http://localhost:${port}`));
+const server = httpServer.listen(port, () => console.log(`Server escuchando, http://localhost:${port}`));
 server.on('error', (error) => console.log(`Error: ${error}`));
+
+
+
 
