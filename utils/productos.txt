@@ -1,1 +1,1 @@
-[]
+[{"nombre":"days gone","desc":"asdasdasdas","codigo":"1456","foto":"URL","precio":123123,"stock":"3","id":1,"fecha":"17 9 2022 10:15:6"},{"nombre":"days gonesssssssss","desc":"asdasdasdas","codigo":"1456","foto":"URL","precio":123123,"stock":"3","id":2,"fecha":"17 9 2022 11:57:29"}]

@@ -18,8 +18,8 @@ class Contenedor {
         let fechaCreacion = `${fecha.getDate()} ${fecha.getMonth()} ${fecha.getFullYear()} ${fecha.getHours()}:${fecha.getMinutes()}:${fecha.getSeconds()}`;
         producto.fecha = fechaCreacion;
         let id = objetoContenido.length + 1;
-        producto.id = id;
-        producto.price = parseInt(producto.price);
+        producto.id = parseInt(id);
+        producto.precio = parseInt(producto.precio);
         objetoContenido.push(producto);
         await fs.promises.writeFile(this.nombreArchivo, JSON.stringify(objetoContenido));
     }
@@ -54,7 +54,7 @@ class Contenedor {
         let filtro = objetoContenido.some(producto => producto.id == idParams);
         let fecha = new Date();
         let fechaCreacion = `${fecha.getDate()} ${fecha.getMonth()} ${fecha.getFullYear()} ${fecha.getHours()}:${fecha.getMinutes()}:${fecha.getSeconds()}`;
-        producto.fecha = fechaCreacion;
+        productoModificado.fecha = fechaCreacion;
         let modificacionArrayProductos = [];
         if(filtro){
             productoModificado.id = idParams;

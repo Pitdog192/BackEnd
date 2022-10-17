@@ -32,35 +32,23 @@ routerProductos.get('/:id', ( req, res )=>{ //devuelve un producto según su id
 
 routerProductos.post('/', sesionMiddleware, ( req, res ) => { //recibe y agrega un producto y lo devuelve con el id asignado
     const productoBody = req.body;
-    const {otorgado} = req;
-    if(otorgado){
     let idAsignado = productos.length + 1;
     productoBody.id = idAsignado;
     (async () => await contenedor.save(productoBody))();
     res.json({
         idAsignado: idAsignado,
         productoGuardado: productoBody
-    });
-    } else {
-        res.json({
-            denied: "No tiene permisos"
-        })
-    }
+    }); 
 })
 
 routerProductos.put('/:id',sesionMiddleware, ( req, res ) => { //recibe y actualiza un producto segun su id
     const pos = parseInt(req.params.id);
     const modificacionProducto = req.body;
-    const {otorgado} = req;
     const filtro = productos.some(producto => producto.id == pos);
-    if(filtro && otorgado){
+    if(filtro){
         (async () => await contenedor.modificarById(pos, modificacionProducto))();
         res.json({
             exito: "Producto modificado con éxito"
-        })
-    } else {
-        res.json({
-            error: "Producto no encontrado o no tiene permisos"
         })
     }
 })
@@ -68,19 +56,12 @@ routerProductos.put('/:id',sesionMiddleware, ( req, res ) => { //recibe y actual
 routerProductos.delete('/:id',sesionMiddleware, ( req, res ) => { // elimina un producto segun su id
     const pos = parseInt(req.params.id);
     const filtro = productos.some(producto => producto.id == pos);
-    const {otorgado} = req;
-    if(filtro && otorgado){
+    if(filtro){
         (async () => await contenedor.deleteById(pos))();
         res.json({
             respuestaPos: "Producto eliminado con éxito"
         })
-    } else {
-        res.json({
-            respuesta: `No se encontró el producto seleccionado con el id: ${pos} o no tiene permisos`
-        })
     }
-    
-
 })
 
 export default routerProductos;
