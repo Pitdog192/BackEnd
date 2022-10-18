@@ -1,8 +1,6 @@
-const administrador = true; //VARIABLE ADMINISTRADOR
-
 const sesionMiddleware = (req, res, next) => {
-    administrador ? req.otorgado = true : req.otorgado = false;
-    if(administrador){
+    console.log(req.headers.admin)
+    if(req.headers.admin == "admin"){
         next()
     } else {
         res.json({respuesta: "no tiene permisos"})

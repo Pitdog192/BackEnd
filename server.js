@@ -62,7 +62,3 @@ io.on('connection', socket => {
 
 const server = httpServer.listen(port, () => console.log(`Server escuchando, http://localhost:${port}`));
 server.on('error', (error) => console.log(`Error: ${error}`));
-
-
-
-

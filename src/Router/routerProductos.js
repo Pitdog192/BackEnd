@@ -4,25 +4,24 @@ import sesionMiddleware from '../Middlewares/sesionMiddle.js';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
-
 const Router = require('router') ;
 const routerProductos = Router();
 
 let contenedor = new Contenedor('./utils/productos.txt'); // constructor de la clase contenedor que maneja el archivo productos.txt
 let productos = await contenedor.manejarArchivo();  // lee el json de productos y lo convierte en un objeto javascript
 
-routerProductos.get('/', ( req, res ) => { //devuelve todos los productos
-    res.json(productos);
-})
-
-routerProductos.get('/:id', ( req, res )=>{ //devuelve un producto según su id 
+routerProductos.get('/:id?', ( req, res )=>{ //devuelve un producto según su id o todos los productos
     const pos = parseInt(req.params.id);
     const filtro = productos.some(producto => producto.id == pos);
-    if(filtro){
+    if(!pos){
+        res.json({
+            productos
+        })
+    } else if(filtro) {
         let busquedaProducto = productos.filter(producto => producto.id == pos)
         res.json({
             producto: busquedaProducto
-        });
+        }); 
     } else {
         res.json({
             respuesta: "El producto no existe"
