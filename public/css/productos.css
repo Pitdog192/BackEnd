@@ -8,3 +8,8 @@
 .card{
     width: 18rem;
 }
+
+.row{
+    justify-content: space-around;
+    padding: 5px;
+}

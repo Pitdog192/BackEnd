@@ -27,9 +27,9 @@ function renderProductos(productos){
         return(
             `<tr>
                 <th scope="row"> ${producto.id}</th>
-                <td> ${producto.title}</td>
-                <td> $${producto.price}</td>
-                <td><img src=${producto.thumnail}></td>
+                <td> ${producto.nombre}</td>
+                <td> $${producto.precio}</td>
+                <td><img src=${producto.foto}></td>
             </tr>`
         );
     }).join(" ");
@@ -53,13 +53,19 @@ const enviarMensaje = () => {
 
 const enviarProducto = () => {
     let nuevoProducto = {
-        title: document.getElementById('title').value,
-        price: document.getElementById('price').value,
-        thumnail: document.getElementById('thumnail').value
+        nombre: document.getElementById('nombre').value,
+        precio: document.getElementById('precio').value,
+        foto: document.getElementById('foto').value,
+        descripcion: document.getElementById('descripcion').value,
+        stock: document.getElementById('stock').value,
+        codigo: document.getElementById('codigo').value
     };
     socket.emit('nuevoProducto', nuevoProducto)
-    document.getElementById('title').value = '';
-    document.getElementById('price').value = '';
-    document.getElementById('thumnail').value = '';
+    document.getElementById('nombre').value = '';
+    document.getElementById('precio').value = '';
+    document.getElementById('foto').value = '';
+    document.getElementById('descripcion').value = '';
+    document.getElementById('stock').value = '';
+    document.getElementById('codigo').value = '';
     return false;
 }

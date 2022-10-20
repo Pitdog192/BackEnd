@@ -13,9 +13,10 @@ const getProductos = (url) => {
                 <p class="card-text">$${producto.precio}</p>
                 <a href="#" class="btn btn-primary">Agregar al carrito </a>
                 </div>
-                <a href="#" class="btn btn-success btnActualizar" data-id="${producto.id}">Actualizar</a>
-                <a href="#" class="btn btn-danger btnEliminar" data-id="${producto.id}">Eliminar</a>
-                `;
+                <div class="row">
+                <a href="#" class="btn btn-success btnActualizar col-5" data-id="${producto.id}">Actualizar</a>
+                <a href="#" class="btn btn-danger btnEliminar col-5" data-id="${producto.id}">Eliminar</a>
+                </div>`;
         card.classList.add('card');
         card.innerHTML = html;
         divProductos.appendChild(card);
@@ -25,3 +26,6 @@ const getProductos = (url) => {
 
 getProductos('http://localhost:8080/productos');
 
+const eliminarProducto = (id_producto) => {
+    fetch(`http://localhost:8080/productos/${id_producto}`)
+}
